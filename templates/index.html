@@ -182,6 +182,14 @@
         return;
       }
 
+      if (!is_positive(lower, upper)) {
+        $.bootstrapGrowl("Upper and lower bounds must be positive", {
+          type: 'danger',
+          align: 'right'
+        });
+        return;
+      }
+
       CONSTRAINTS.push([nutrient, lower, upper]);
       var myJSON = JSON.stringify(CONSTRAINTS);
 
@@ -228,6 +236,11 @@
     // Checksi if lower bound is less than or equal to upper bound
     var is_ordered = function(lower, upper) {
       return lower <= upper;
+    }
+
+    // Ensures upper and lower bounds are positive numbers
+    var is_positive = function(lower, upper) {
+      return (lower >= 0 && upper >= 0);
     }
 
     // Clears constratints and loads all foods
