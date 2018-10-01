@@ -1,0 +1,23 @@
+/* Move Sorting Icons to the left of Column Name */
+table.dataTable thead .sorting,
+table.dataTable thead .sorting_desc,
+table.dataTable thead .sorting_asc {
+  padding-left: 30px !important;
+  padding-right: initial !important;
+}
+
+table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before, table.dataTable thead .sorting_desc:before, table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorting_desc_disabled:before {
+    left: 16px !important;
+    right: auto !important;
+}
+table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after {
+  left: 8px !important;
+  right: auto !important;
+}
+
+.red {
+  color: #f05050 !important;
+}
+.blue {
+  color: #007bff !important;
+}

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+   <title>Food - Search Food Database</title>
+   <!-- =============== VENDOR STYLES ===============-->
+   <!-- FONT AWESOME-->
+   <link rel="stylesheet" href="{{ url_for('static', filename='app/vendor/font-awesome/css/font-awesome.css') }}">
+   <!-- SIMPLE LINE ICONS-->
+   <link rel="stylesheet" href="{{ url_for('static', filename='app/vendor/simple-line-icons/css/simple-line-icons.css') }}">
+   <!-- ANIMATE.CSS-->
+   <link rel="stylesheet" href="{{ url_for('static', filename='app/vendor/animate.css/animate.css') }}">
+   <!-- WHIRL (spinners)-->
+   <link rel="stylesheet" href="{{ url_for('static', filename='app/vendor/whirl/dist/whirl.css') }}">
+   <!-- SWEET ALERT-->
+   <link rel="stylesheet" href="{{ url_for('static', filename='app/vendor/sweetalert/dist/sweetalert.css') }}">
+   <!-- =============== PAGE VENDOR STYLES ===============-->
+   <!-- Datatables-->
+   <link rel="stylesheet" href="{{ url_for('static', filename='app/vendor/datatables.net-bs4/css/dataTables.bootstrap4.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='app/vendor/datatables.net-keytable-bs/css/keyTable.bootstrap.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='app/vendor/datatables.net-responsive-bs/css/responsive.bootstrap.css') }}">
+   <!-- =============== BOOTSTRAP STYLES ===============-->
+   <link rel="stylesheet" href="{{ url_for('static', filename='app/css/bootstrap.css') }}" id="bscss">
+   <!-- =============== APP STYLES ===============-->
+   <link rel="stylesheet" href="{{ url_for('static', filename='app/css/app.css') }}" id="maincss">
+   <!-- =============== SPINNER ===============-->
+   <link rel="stylesheet" href="{{ url_for('static', filename='app/vendor/loaders.css/loaders.css') }}">
+   <!-- Global Styling Changes-->
+   <link rel="stylesheet" href="{{ url_for('static', filename='app/css/global.css') }}">
+</head>
+<body>
+   <div class="wrapper">
+      <!-- Main section-->
+      <section class="section-container">
+         <!-- Page content-->
+         <div class="content-wrapper">
+            <div class="content-heading">
+               <div>Food Search
+                  <small>Find foods based on their nutrient content</small>
+               </div>
+            </div>
+            <div class="container-fluid">
+               <!-- DATATABLE DEMO 2-->
+               <div class="card">
+                 <div class="card-header">
+                    <span><b>Set Constraints</b></span>
+                 </div>
+                  <div class="card-body">
+                    <p>
+                      <form>
+                        <div class="row">
+                          <div class="col-5" >
+                            <p>
+                            <select class="form-control" style="width: 100%" id="selectNutrient">
+                                       <option value="empty">Select Nutrient</option>
+                                       <option value="203">Protein (g)</option>
+                                       <option value="204">Total Lipid (fat)</option>
+                                       <option value="205">Carbohyrdrate, by difference (g)</option>
+                                       <option value="207">Ash (g)</option>
+                                       <option value="208">Energy (g)</option>
+                                       <option value="221">Alcohol, ethyl (g)</option>
+                                       <option value="269">Sugars, total (g)</option>
+                                       <option value="291">Fiber, total dietary (g)</option>
+                            </select>
+                          </p>
+                          </div>
+                          <div class="col-2">
+                            <p>
+                            <input type="text" class="form-control" placeholder="Lower Bound" id="lowerBound" style="width: 75%">
+                          </p>
+                          </div>
+                          <div class="col-2">
+                            <p>
+                            <input type="text" class="form-control" placeholder="Upper Bound" id="upperBound" style="width: 75%">
+                          </p>
+                          </div>
+                        </div>
+                        <button class="btn btn-square btn-success" type="button" onclick="searchFoods();">Add Constraint</button>
+                      </form>
+                    <br>
+                  </br>
+                      <button class="btn btn-square btn-danger" type="button" onclick="clearConstraints();">Clear Constraints</button>
+                    </p>
+                  </div>
+               </div>
+               <div class="card">
+                <div class="card-body">
+                  <table id="returnedFoods" class="table table-striped my-4 w-100">
+                      <thead>
+                          <tr>
+                              <th>NDBno</th>
+                              <th>Name</th>
+                              <th>Weight</th>
+                              <th>Measure</th>
+                          </tr>
+                      </thead>
+                  </table>
+                </div>
+             </div>
+            </div>
+         </div>
+      </section>
+      <!-- Page footer-->
+      <footer class="footer-container">
+         <span>Thryve Challenge - October 1, 2018</span>
+      </footer>
+   </div>
+
+   <!-- =============== VENDOR SCRIPTS ===============-->
+   <!-- MODERNIZR-->
+   <script src="{{ url_for('static', filename='app/vendor/modernizr/modernizr.custom.js') }}"></script>
+   <!-- JQUERY-->
+   <script src="{{ url_for('static', filename='app/vendor/jquery/dist/jquery.js') }}"></script>
+   <!-- BOOTSTRAP-->
+   <script src="{{ url_for('static', filename='app/vendor/popper.js/dist/umd/popper.js') }}"></script>
+   <script src="{{ url_for('static', filename='app/vendor/bootstrap/dist/js/bootstrap.js') }}"></script>
+   <!-- STORAGE API-->
+   <script src="{{ url_for('static', filename='app/vendor/js-storage/js.storage.js') }}"></script>
+   <!-- JQUERY EASING-->
+   <script src="{{ url_for('static', filename='app/vendor/jquery.easing/jquery.easing.js') }}"></script>
+   <!-- ANIMO-->
+   <script src="{{ url_for('static', filename='app/vendor/animo/animo.js') }}"></script>
+   <!-- SCREENFULL-->
+   <script src="{{ url_for('static', filename='app/vendor/screenfull/dist/screenfull.js') }}"></script>
+   <!-- LOCALIZE-->
+   <script src="{{ url_for('static', filename='app/vendor/jquery-localize/dist/jquery.localize.js') }}"></script>
+   <!-- SWEET ALERT-->
+   <script src="{{ url_for('static', filename='app/vendor/sweetalert/dist/sweetalert.min.js') }}"></script>
+   <!-- =============== PAGE VENDOR SCRIPTS ===============-->
+   <!-- Datatables-->
+   <script src="{{ url_for('static', filename='app/vendor/datatables.net/js/jquery.dataTables.js') }}"></script>
+   <script src="{{ url_for('static', filename='app/vendor/datatables.net-bs4/js/dataTables.bootstrap4.js') }}"></script>
+   <script src="{{ url_for('static', filename='app/vendor/datatables.net-buttons/js/dataTables.buttons.js') }}"></script>
+   <script src="{{ url_for('static', filename='app/vendor/datatables.net-buttons-bs/js/buttons.bootstrap.js') }}"></script>
+   <script src="{{ url_for('static', filename='app/vendor/datatables.net-buttons/js/buttons.colVis.js') }}"></script>
+   <script src="{{ url_for('static', filename='app/vendor/datatables.net-buttons/js/buttons.flash.js') }}"></script>
+   <script src="{{ url_for('static', filename='app/vendor/datatables.net-buttons/js/buttons.html5.js') }}"></script>
+   <script src="{{ url_for('static', filename='app/vendor/datatables.net-buttons/js/buttons.print.js') }}"></script>
+   <script src="{{ url_for('static', filename='app/vendor/datatables.net-keytable/js/dataTables.keyTable.js') }}"></script>
+   <script src="{{ url_for('static', filename='app/vendor/datatables.net-responsive/js/dataTables.responsive.js') }}"></script>
+   <script src="{{ url_for('static', filename='app/vendor/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
+   <script src="{{ url_for('static', filename='app/vendor/jszip/dist/jszip.js') }}"></script>
+   <script src="{{ url_for('static', filename='app/vendor/pdfmake/build/pdfmake.js') }}"></script>
+   <script src="{{ url_for('static', filename='app/vendor/pdfmake/build/vfs_fonts.js') }}"></script>
+   <!-- =============== APP SCRIPTS ===============-->
+   <script src="{{ url_for('static', filename='app.js') }}"></script>
+   <script type="text/javascript">
+    // Global keeps track of constraints
+    var CONSTRAINTS = []
+
+    // Main search feature that returns foods based on constraints
+    var searchFoods = function () {
+
+      // Pull Form Data
+      var nutrient   = $('#selectNutrient').val();
+      var lower      = $('#lowerBound').val();
+      var upper      = $('#upperBound').val();
+
+      // Error Checking
+      if(!is_complete(nutrient, lower, upper)) {
+        $.bootstrapGrowl("Constraint definition is incomplete", {
+          type: 'danger',
+          align: 'right'
+        });
+        return;
+      }
+
+      if (is_numeric(lower, upper)) {
+        $.bootstrapGrowl("Upper and lower bounds must be numbers", {
+          type: 'danger',
+          align: 'right'
+        });
+        return;
+      }
+
+      if (!is_ordered(lower, upper)) {
+        $.bootstrapGrowl("Lower bound must be less than or equal to upper bound", {
+          type: 'danger',
+          align: 'right'
+        });
+        return;
+      }
+
+      CONSTRAINTS.push([nutrient, lower, upper]);
+      var myJSON = JSON.stringify(CONSTRAINTS);
+
+      $.ajax({
+  			type:"get",
+  			url:"/constrainTable",
+  			data: {
+          nutrient: nutrient,
+          lower: lower,
+          upper: upper,
+          constraints: myJSON
+        },
+  			success: function(response){
+          obj = JSON.parse(response);
+          table.clear();
+          table.rows.add(obj.data)
+          table.draw();
+          $('#upperBound').val('');
+          $('#lowerBound').val('');
+          $('#selectNutrient').val('empty').trigger('change');
+		    }
+      });
+    };
+
+    // Checks if form is complete
+    var is_complete = function (nutrient, lower, upper) {
+      if (lower != "" && (nutrient == 'empty' || upper == "")) {
+        return false;
+      }
+      if (upper != "" && (nutrient == 'empty' || lower == "")) {
+        return false;
+      }
+      if (nutrient != 'empty' && (lower == "" || upper == "")) {
+        return false;
+      }
+      return true;
+    }
+
+    // Checks if both bounds are numeric
+    var is_numeric = function (lower, upper) {
+      return (isNaN(lower) || isNaN(upper));
+    }
+
+    // Checksi if lower bound is less than or equal to upper bound
+    var is_ordered = function(lower, upper) {
+      return lower <= upper;
+    }
+
+    // Clears constratints and loads all foods
+    var clearConstraints = function() {
+      table.clear();
+      $('#returnedFoods').DataTable().ajax.reload();
+      return CONSTRAINTS = [];
+    }
+
+    // Loads in entire foods table to be constrained
+    $(function() {
+      table = $('#returnedFoods').DataTable({
+        "order": [[ 0, "asc" ]],
+        "ajax": "/getTable",
+        "columns": [
+          { "data": "ndbno" },
+          { "data": "name" },
+          { "data": "weight" },
+          { "data": "measure" }
+        ]
+      });
+    });
+   </script>
+</body>
+</html>
