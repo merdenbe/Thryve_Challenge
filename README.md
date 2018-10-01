@@ -1,6 +1,7 @@
 Food Nutrition API
 
 Backend: Python/Flask
+
 Frontend: HTML/CSS/Javascript with Bootstrap and Datatables API
 
 Problem: Allow user to search for foods based on nutritional constraints
@@ -17,4 +18,4 @@ Use:
   2. Add upper and lower bounds for amount of that nutrient
   3. Click "Add Constraint" to constrict the foods table below
   4. Continue to add constraints using step 3
-  5. At any time, click "Clear Constraints" to begin a new search 
+  5. At any time, click "Clear Constraints" to begin a new search
