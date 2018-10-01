@@ -33,20 +33,30 @@ def getTable():
 def constrainTable():
     response = {}
     json_data = []
+    ndbno_sets = []
     mycursor = mydb.cursor()
     constraints = json.loads(request.args.get('constraints'))
     sql = """SELECT DISTINCT foods.ndbno, foods.name, foods.weight, foods.measure FROM foods, contain WHERE nutrient_id = %s AND value >= %s AND value <= %s AND foods.ndbno = contain.ndbno"""
+
     # Executes query on each set of constraints building bag of foods (with duplicates)
     for constraint in constraints:
+        tmp_set = set()
         val = (constraint[0], constraint[1], constraint[2])
         mycursor.execute(sql, val)
         row_headers=[x[0] for x in mycursor.description]
         result = mycursor.fetchall()
-        print(len(result))
         for result in result:
-            json_data.append(dict(zip(row_headers,result)))
+            row = dict(zip(row_headers,result))
+            json_data.append(row)
+            tmp_set.add(row['ndbno'])
+        ndbno_sets.append(tmp_set)
+
+    # Get Intersection of Queries
+    intersect_ndbno = list(ndbno_sets[0].intersection(*ndbno_sets))
+    intersect = [row for row in json_data if row['ndbno'] in intersect_ndbno]
+
     # Converts bag to set (no duplicates)
-    json_set = list({row['ndbno']:row for row in json_data}.values())
+    json_set = list({row['ndbno']:row for row in intersect}.values())
     response['data'] = json_set
     return json.dumps(response)
 
