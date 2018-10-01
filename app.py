@@ -48,3 +48,6 @@ def constrainTable():
     json_set = list({row['ndbno']:row for row in json_data}.values())
     response['data'] = json_set
     return json.dumps(response)
+
+if __name__ == '__main__':
+    app.run()
